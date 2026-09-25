@@ -1,154 +1,229 @@
-# Résumé Exécutif & Historique des Sessions — Projet Deporrtex
+# Guide Opérationnel & Résumé des Sessions — Projet Deporrtex
 
-> **Dernière mise à jour :** 24 septembre 2026  
-> **Workspace :** `rami site` (`atlasgurzil-web/deporrtex`)  
-> **Branche active :** `feat/shopify-design-fidelity`  
+> **Dernière mise à jour :** 25 septembre 2026  
+> **Workspace :** `rami site`  
+> **Dépôt GitHub :** [`https://github.com/atlasgurzil-web/deporrtex.git`](https://github.com/atlasgurzil-web/deporrtex.git)  
+> **Site en Production (Vercel) :** [https://deporrtex.vercel.app/](https://deporrtex.vercel.app/)  
+> **Branches actives :** `main` (Production Vercel) & `feat/shopify-design-fidelity`  
 
 ---
 
-## 1. Fiche d'Identité du Projet
+## 📑 Sommaire
+1. [Coffre-fort des Identifiants, Tokens & APIs](#1-coffre-fort-des-identifiants-tokens--apis)
+2. [Architecture Vercel Serverless & Tracking](#2-architecture-vercel-serverless--tracking)
+3. [Guide Pas-à-Pas des Modifications Futures (How-To)](#3-guide-pas-à-pas-des-modifications-futures-how-to)
+4. [Cartographie des Fichiers du Projet](#4-cartographie-des-fichiers-du-projet)
+5. [Historique Complet des Sessions de Développement](#5-historique-complet-des-sessions-de-développement)
 
-Le projet **Deporrtex** est un écosystème de **Landing Pages e-commerce en Cash on Delivery (COD)**, conçu sur mesure pour le marché algérien (58 wilayas) et optimisé pour la conversion via des campagnes publicitaires ciblées **Meta Ads** (Facebook & Instagram).
+---
+
+## 1. Coffre-fort des Identifiants, Tokens & APIs
+
+Ce tableau regroupe l'intégralité des clés, jetons et points d'accès utilisés par l'écosystème Deporrtex :
+
+### 🎯 Meta Ads (Pixel & Conversions API - CAPI)
+
+| Paramètre | Valeur Configurée | Emplacement dans le code |
+| :--- | :--- | :--- |
+| **Pixel Meta ID** | `1422859033068055` | `index.html`, `deportex01.html` à `04.html`, `api/order.js`, `api/capi-event.js` |
+| **Meta Access Token (CAPI)** | `EAANMcvfs0pMBSdirhWIvrsGm4vGYw0eCsRRrlKMEswd4ccPxYNKtAcUxyHbZBAwJdJJhLIWP5c4HMEGmV7Im3ZADcNiLUlFfRGhhRLNr6FsoAtRFXNjZCDs5ZAOTV0BwG2SMZCnZBzlZATuJaSEXTZCmqMQDZBFrwN6r4CFEGp32kOa2rlSSQ6GHWukZCchx07uwZDZD` | `api/order.js`, `api/capi-event.js` |
+| **Version API Graph Meta** | `v21.0` | `api/order.js`, `api/capi-event.js` |
+| **Endpoint CAPI Graph** | `https://graph.facebook.com/v21.0/1422859033068055/events` | Appelé côté serveur à chaque vente |
+| **Événements Trackés** | • `PageView` (Chargement page)<br>• `Purchase` (Validation commande) | Navigateur (Pixel) + Serveur (CAPI dédupliqué via `eventId`) |
+| **Pays & Devise** | `country: 'dz'`, `currency: 'DZD'` | Format monétaire dinar algérien |
+
+---
+
+### 🚚 Société de Livraison : NOEST Delivery (Nord & Ouest - Algérie)
+
+| Paramètre | Valeur Configurée | Utilisation |
+| :--- | :--- | :--- |
+| **Base URL NOEST** | `https://app.noest-dz.com/api/public/` | Base de l'API REST NOEST |
+| **Token d'Autorisation** | `Bearer JlLZKsPRF6eClTd4v2NaDfS60JZLbgxtWfd` | `api/noest/data.js`, `api/noest/communes.js`, `api/order.js` |
+| **User GUID** | `UHGCDOGE` | Identifiant marchand NOEST pour la création de commande |
+| **Tarifs (58 wilayas)** | `GET https://app.noest-dz.com/api/public/fees` | Relayé via `/api/noest/data` (en cache 1 heure) |
+| **Bureaux Stop-Desk** | `GET https://app.noest-dz.com/api/public/desks` | Relayé via `/api/noest/data` (adresses des centres de retrait) |
+| **Communes par Wilaya** | `GET https://app.noest-dz.com/api/public/get/communes/{wilayaId}` | Relayé via `/api/noest/communes?wilaya=XX` |
+| **Création de Colis** | `POST https://app.noest-dz.com/api/public/create/order` | Déclenché à chaque soumission valide sur le site |
+| **PDF Documentation** | [`api_documentation_en_v2_3.pdf`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/api_documentation_en_v2_3.pdf) | Guide officiel des statuts et endpoints NOEST v2.3 |
+
+#### Exemple de Payload transmis à NOEST :
+```json
+{
+  "user_guid": "UHGCDOGE",
+  "reference": "DPX-841923",
+  "client": "Karim Benali",
+  "phone": "0550123456",
+  "adresse": "Centre-ville ou adresse complète",
+  "wilaya_id": 16,
+  "commune": "Alger Centre",
+  "montant": 3200,
+  "remarque": "Couleur: أسود وأحمر | Qte: 1",
+  "produit": "نظارات رياضية طبية Deporrtex",
+  "type_id": 1,
+  "stop_desk": 0,
+  "station_code": ""
+}
+```
+
+---
+
+### ☁️ Hébergement & Déploiement Vercel
 
 | Paramètre | Détail |
 | :--- | :--- |
-| **Produit** | Lunettes de sport de protection 2-en-1 (branches classiques interchangeables + sangle élastique de maintien pour sports intenses, cadre antichoc, verres correcteurs adaptables chez l'opticien). |
-| **Marque** | **Deporrtex** |
-| **Cible** | Hommes algériens (18–40 ans), porteurs de lunettes de vue et sportifs (football, running, musculation, sports collectifs). |
-| **Tarification** | **2 900 DZD** (prix d'origine barré à 4 200 DZD, réduction promotionnelle de -31%). |
-| **Logistique & Paiement** | Paiement à la livraison (**Cash on Delivery / COD**), expédition sur **58 wilayas** algériennes via **NOEST Delivery**. |
-| **Canaux de contact** | WhatsApp direct (`0673547329`), [Page Facebook officielle](https://www.facebook.com/share/19UMhUMsKD/), compte Instagram `@deporrtex`. |
-| **Dépôt Git** | [`atlasgurzil-web/deporrtex`](https://github.com/atlasgurzil-web/deporrtex.git) |
-| **Hébergement & Déploiements** | • Vercel : `https://deporrtex.vercel.app/`<br>• VPS Traefik / Autonnel : `https://maktabi.space/deportex01` à `04` |
+| **URL Production** | **`https://deporrtex.vercel.app/`** |
+| **Variantes A/B Testing** | • `https://deporrtex.vercel.app/deportex01` (Rouge Crimson)<br>• `https://deporrtex.vercel.app/deportex02` (Bleu Cyan)<br>• `https://deporrtex.vercel.app/deportex03` (Vert Neon)<br>• `https://deporrtex.vercel.app/deportex04` (Orange Blaze) |
+| **Configuration Vercel** | [`vercel.json`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/vercel.json) (active `cleanUrls: true`, met en cache les images CDN et redirige `/api/boostili/*` vers `/api/*`) |
+| **Déclencheur de build** | Tout `git push origin main` déclenche un déploiement automatique en ~20 secondes sur Vercel |
 
 ---
 
-## 2. Cartographie des Fichiers et Architecture Technique
+## 2. Architecture Vercel Serverless & Tracking
 
-Le projet repose sur une approche **ultra-rapide, sans framework lourd**, avec un balisage HTML sémantique, du CSS optimisé, du JavaScript pur (Vanilla) et un rendu **RTL natif** pour la langue arabe (police Cairo).
+```
+                    ┌──────────────────────────────┐
+                    │      Visiteur (Client)       │
+                    │  https://deporrtex.vercel.app│
+                    └──────────────┬───────────────┘
+                                   │
+         ┌─────────────────────────┼─────────────────────────┐
+         │ (1) Chargement          │ (2) Saisie wilaya       │ (3) Validation Commande
+         ▼                         ▼                         ▼
+┌──────────────────┐      ┌──────────────────┐      ┌──────────────────┐
+│  Pixel Navigateur│      │ GET /api/noest/  │      │ POST /api/order  │
+│  fbq('PageView') │      │ communes?wilaya= │      │ (Serverless Fn)  │
+└──────────────────┘      └──────────────────┘      └────────┬─────────┘
+                                                             │
+                                   ┌─────────────────────────┴─────────────────────────┐
+                                   ▼                                                   ▼
+                        ┌──────────────────────┐                            ┌──────────────────────┐
+                        │   NOEST API Delivery │                            │ Meta Conversions API │
+                        │  POST /create/order  │                            │  (Graph API v21.0)   │
+                        │                      │                            │  eventId dédupliqué  │
+                        │ ➔ Retourne Tracking  │                            │  Hachage SHA256 (ph) │
+                        └──────────────────────┘                            └──────────────────────┘
+```
+
+---
+
+## 3. Guide Pas-à-Pas des Modifications Futures (How-To)
+
+### ❓ A. Comment changer le Pixel Meta ?
+1. Ouvrez [`index.html`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/index.html) et les variantes [`deportex01.html`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/deportex01.html) à `04.html`.
+2. Remplacez la valeur :
+   ```javascript
+   window.META_PIXEL_ID = "NOUVEAU_PIXEL_ID";
+   ```
+3. Ouvrez [`api/order.js`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/api/order.js) et [`api/capi-event.js`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/api/capi-event.js) et mettez à jour la constante :
+   ```javascript
+   const META_PIXEL_ID = process.env.META_PIXEL_ID || "NOUVEAU_PIXEL_ID";
+   ```
+
+### ❓ B. Comment renouveler le Token Meta CAPI ?
+1. Rendez-vous sur votre **Meta Events Manager** > Paramètres > Conversions API > *Générer un jeton d'accès*.
+2. Ouvrez [`api/order.js`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/api/order.js) et [`api/capi-event.js`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/api/capi-event.js).
+3. Remplacez la valeur de `META_ACCESS_TOKEN`.
+4. *Optionnel :* Vous pouvez également renseigner cette variable directement dans le tableau de bord Vercel (*Project Settings > Environment Variables > META_ACCESS_TOKEN*).
+
+### ❓ C. Comment changer le compte ou token NOEST Delivery ?
+1. Ouvrez [`api/noest/data.js`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/api/noest/data.js), [`api/noest/communes.js`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/api/noest/communes.js) et [`api/order.js`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/api/order.js).
+2. Modifiez le token :
+   ```javascript
+   const NOEST_TOKEN = process.env.NOEST_TOKEN || "NOUVEAU_TOKEN_BEARER";
+   ```
+3. Dans [`api/order.js`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/api/order.js), modifiez le GUID utilisateur :
+   ```javascript
+   const NOEST_GUID = process.env.NOEST_GUID || "NOUVEAU_USER_GUID";
+   ```
+
+### ❓ D. Comment modifier le prix du produit ?
+1. Ouvrez [`index.html`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/index.html) (vers la ligne 1580) :
+   ```javascript
+   const UNIT_PRICE = 2900; // Mettre le nouveau prix unitaire en DZD
+   ```
+2. Modifiez le texte d'affichage du prix dans le HTML (recherchez `2 900` ou `2900`).
+3. Dans [`api/order.js`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/api/order.js), ajustez la valeur de repli si nécessaire.
+
+### ❓ E. Comment ajouter ou remplacer une photo ?
+1. Placez votre nouvelle image dans [`images/deportex/`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/images/deportex/) (ex: `nouvelle_photo.jpg`).
+2. Dans [`index.html`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/index.html), référencez-la via :
+   ```html
+   <img src="/images/deportex/nouvelle_photo.jpg" alt="Description">
+   ```
+
+### ❓ F. Comment déployer vos modifications sur Vercel et GitHub ?
+Depuis votre terminal ou invite de commande dans le dossier `rami site`, exécutez simplement :
+```bash
+git add -A
+git commit -m "Description de vos modifications"
+git push origin main
+```
+> Vercel détecte le push et met en ligne votre mise à jour en direct en moins de 30 secondes.
+
+---
+
+## 4. Cartographie des Fichiers du Projet
 
 ```
 rami site/
-├── index.html                  # Landing page de base (Hero + Formulaire haut de page)
-├── deportex01.html             # Variante Ads 1 : Crimson Red & Stealth Carbon
-├── deportex02.html             # Variante Ads 2 : Electric Cyan & Tech Obsidian
-├── deportex03.html             # Variante Ads 3 : Cyber Neon Lime & Deep Onyx
-├── deportex04.html             # Variante Ads 4 : Turbo Blaze Orange & Slate Black
-├── google_sheet_script.js      # Script Google Apps Script pour ingestion des leads
-├── logo deportex.jpg           # Logo officiel haute fidélité
-├── api_documentation_en_v2_3.pdf # Documentation API logistique NOEST Delivery
+├── .gitignore                     # Sécurisation des clés privées et fichiers d'environnement
+├── vercel.json                    # Routage Serverless, Clean URLs et règles de cache CDN
+├── index.html                     # Landing page principale en production (Crimson & Carbon)
+├── deportex01.html                # Variante Ads 01 : Crimson Red & Stealth Carbon
+├── deportex02.html                # Variante Ads 02 : Electric Cyan & Tech Obsidian
+├── deportex03.html                # Variante Ads 03 : Cyber Neon Lime & Deep Onyx
+├── deportex04.html                # Variante Ads 04 : Turbo Blaze Orange & Slate Black
+├── api/                           # Fonctions Serverless Vercel
+│   ├── noest/
+│   │   ├── data.js                # API Proxy : Tarifs wilayas & Bureaux Stop-Desk en cache
+│   │   └── communes.js            # API Proxy : Communes par Wilaya
+│   ├── order.js                   # API Commande : Création colis NOEST + CAPI Purchase
+│   └── capi-event.js              # API Proxy : Relais PageView Meta CAPI
+├── images/
+│   └── deportex/                  # 27 images produits HD, bannières et avis clients
+├── Assets/                        # Dossier source des photographies originales
+├── temoignage/                    # Preuves sociales et retours clients algériens réels
+├── api_documentation_en_v2_3.pdf  # Spécification officielle API NOEST Delivery v2.3
+├── google_sheet_script.js         # Connecteur de secours Google Apps Script
 ├── docs/
-│   ├── PRD.md                  # Cahier des charges produit complet (US-1 à US-12)
-│   ├── PLAN.md                 # Découpage architectural en phases tracer bullets
-│   ├── GOOGLE_SHEETS_SETUP.md  # Guide de configuration Google Apps Script & Webhook
-│   └── SESSION_SUMMARY.md      # Le présent document de synthèse et d'historique
-├── Assets/                     # Pack de photos produit HD (angles, coloris, accessoires)
-├── temoignage/                 # Preuves sociales réelles (captures avis et retours clients)
-└── SSH KEY/                    # Clés d'accès et certificats d'administration VPS
+│   ├── SESSION_SUMMARY.md         # Ce document complet de synthèse et de référence
+│   ├── PRD.md                     # Cahier des charges produit et User Stories
+│   ├── PLAN.md                    # Plan d'implémentation
+│   └── GOOGLE_SHEETS_SETUP.md     # Configuration optionnelle Google Sheets
+└── SSH KEY/                       # Clés SSH d'administration VPS (exclues du Git par .gitignore)
 ```
 
 ---
 
-## 3. Dispositif de Tracking Meta Ads (Pixel & CAPI)
+## 5. Historique Complet des Sessions de Développement
 
-Afin de maximiser la délivrabilité des données et d'optimiser l'algorithme Meta face aux bloqueurs de pub et restrictions iOS :
+### Session 1 : Cadrage Produit & Spécifications COD (9 sept. 2026)
+* Rédaction du PRD ([`docs/PRD.md`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/docs/PRD.md)), modélisation du persona sportif algérien porteur de lunettes et modèle économique COD à 2 900 DZD.
+* Écriture du connecteur Google Sheets ([`google_sheet_script.js`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/google_sheet_script.js)).
 
-* **Pixel Meta ID :** `1422859033068055`
-* **Architecture Hybride :**
-  1. **Côté Client (Navigateur) :** `fbq('track', ...)` avec correspondance avancée manuelle (`country: 'dz'`).
-  2. **Côté Serveur (Conversions API - CAPI) :** Requêtes `POST /api/boostili/capi-event` relayées par conteneur serveur.
-* **Déduplication stricte :** Émission systématique d'un `eventId` unique partagé entre l'événement navigateur et l'événement serveur (ex: `pv_<timestamp>_<random>`, `lead_<timestamp>_<random>`, `pur_<timestamp>_<random>`).
-* **Advanced Matching dynamique :** Hachage et transmission du numéro de téléphone (`ph`) et des données de localisation lors de la saisie utilisateur.
+### Session 2 : Ergonomie Shopify & Rehaussement du Formulaire (10 sept. 2026)
+* Optimisation du design mono-produit inspiré de Shopify.
+* Rehaussement du formulaire de commande juste sous le hero pour booster la conversion sur smartphone sans scroll inutile.
 
----
+### Session 3 : Création des 4 Variantes Graphiques (10 sept. 2026)
+* Création des 4 identités visuelles pour l'A/B testing Meta Ads ([`deportex01.html`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/deportex01.html) à [`04.html`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/deportex04.html)).
+* Intégration du logo officiel et configuration du Pixel Meta `1422859033068055`.
 
-## 4. Chronologie Complète des Sessions de Développement
+### Session 4 : Diagnostic CAPI & Pipeline Réseau (12 sept. 2026)
+* Analyse des signaux de conversion sur les premières campagnes publicitaires.
+* Rétro-ingénierie et envoi rétroactif des événements d'achat réels avec score de correspondance élevé.
 
-### Session 1 : Cadrage Produit & Première Implémentation
-* **Date :** 9 septembre 2026 (16h19 – 20h35)
-* **ID Antigravity :** `264f62ed-b5c6-4b21-9428-c3579b461091`
-* **Méthodologie & Compétences :** `/interroge`, `/cadre`, `/planifie`
+### Session 5 à 7 : Consolidation & Archivage (24 sept. 2026)
+* Organisation de la mémoire conversationnelle et création de la documentation de synthèse.
+
+### Session 8 : Déploiement Autonome Vercel & Intégration Complète NOEST (25 sept. 2026)
+* **Objectif utilisateur :** Avoir une landing page 100 % autonome et fonctionnelle sur Vercel avec Pixel Meta et API NOEST directement connectés sans dépendre d'un serveur VPS tiers.
 * **Réalisations :**
-  1. Interview approfondie pour formaliser le problème cible, la solution, le persona et le modèle économique COD.
-  2. Rédaction du document de spécification [`docs/PRD.md`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/docs/PRD.md) avec 12 User Stories et critères de validation.
-  3. Élaboration du plan d'exécution technique par tranches verticales [`docs/PLAN.md`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/docs/PLAN.md).
-  4. Création de [`index.html`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/index.html) (10 sections complètes, design dark/sportif, police Cairo, layout RTL).
-  5. Développement du connecteur Google Sheets [`google_sheet_script.js`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/google_sheet_script.js) pour enregistrer automatiquement chaque soumission de commande.
-  6. Rédaction du guide de déploiement Google Apps Script [`docs/GOOGLE_SHEETS_SETUP.md`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/docs/GOOGLE_SHEETS_SETUP.md).
-
----
-
-### Session 2 : Alignement Shopify, Optimisation Mobile & Export Git / Vercel
-* **Date :** 10 septembre 2026 (13h51 – 16h58)
-* **ID Antigravity :** `5793ba05-b71b-49fb-a9de-dd3452e7cce1`
-* **Méthodologie & Compétences :** `/investigue`, `/design`, `/ui-ux-pro-max`, `/branche`, `/livre`
-* **Réalisations :**
-  1. Recentrage strict sur l'expérience mono-produit sans dispersion d'offres.
-  2. Refonte du design pour reproduire fidèlement l'ergonomie d'une boutique Shopify à haut taux de conversion (bannières, typographie, hiérarchie).
-  3. Rehaussement stratégique du formulaire de commande : positionné juste sous le hero (« above the fold ») pour permettre au mobinaute algérien de commander immédiatement sans scroller l'intégralité de la page.
-  4. Création de la branche Git `feat/shopify-design-fidelity`.
-  5. Initialisation du dépôt GitHub distant [`atlasgurzil-web/deporrtex`](https://github.com/atlasgurzil-web/deporrtex.git) et push des versions de code.
-  6. Déploiement et tests de performance sur Vercel (`https://deporrtex.vercel.app/`).
-
----
-
-### Session 3 : 4 Variantes Landing Pages, VPS & Intégration Meta Tracking
-* **Date :** 10 septembre 2026 (18h08 – 21h16)
-* **ID Antigravity :** `dd2bd1db-da57-4fe2-ac95-113947deda3e`
-* **Méthodologie & Compétences :** `/grill-me`, architecture VPS, tracking Meta CAPI
-* **Réalisations :**
-  1. Stress-test du plan de déploiement publicitaire via `/grill-me`.
-  2. Création de 4 variantes indépendantes pour l'A/B testing des campagnes Meta Ads :
-     * [`deportex01.html`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/deportex01.html) : Thème Crimson Red & Stealth Carbon
-     * [`deportex02.html`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/deportex02.html) : Thème Electric Cyan & Tech Obsidian
-     * [`deportex03.html`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/deportex03.html) : Thème Cyber Neon Lime & Deep Onyx
-     * [`deportex04.html`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/deportex04.html) : Thème Turbo Blaze Orange & Slate Black
-  3. Intégration du logo officiel [`logo deportex.jpg`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/logo%20deportex.jpg).
-  4. Déploiement sur le serveur VPS sous domaine `maktabi.space` (orchestré par Traefik et conteneur Autonnel).
-  5. Implémentation du moteur de tracking Meta hybride (Pixel `1422859033068055` + CAPI avec déduplication et `eventID`).
-  6. Correction de la navigation : suppression des boutons flottants encombrants et fluidification du sélecteur des wilayas/communes.
-
----
-
-### Session 4 : Audit & Diagnostic Tracking Ads (Événement Purchase CAPI)
-* **Date :** 12 septembre 2026 (18h01 – 19h16)
-* **ID Antigravity :** `dd2bd1db-da57-4fe2-ac95-113947deda3e` (suite)
-* **Sujet & Diagnostic :**
-  * Constat après premières diffusions publicitaires sur `maktabi.space/deportex03` : les commandes arrivaient bien dans l'interface logistique Noest, mais l'événement d'optimisation publicitaire `Purchase` ne remontait pas convenablement dans Meta Events Manager via CAPI.
-  * Analyse des signaux réseau et plan de fiabilisation du pipeline serveur CAPI.
-
----
-
-### Session 5 : Cadrage d'Automatisation Éditoriale (Projet Médical)
-* **Date :** 24 septembre 2026 (21h12)
-* **ID Antigravity :** `6738f0b0-312a-4109-82ee-2cd445af0387`
-* **Méthodologie :** `/interroge` (Mode interview de conception)
-* **Sujet :** Conception d'un système d'automatisation éditoriale IA haute crédibilité pour la page Facebook d'un cabinet de gynécologie (priorité Qualité > Quantité > Fréquence, ton sobre et médical, zéro contenu générique IA).
-
----
-
-### Session 6 : Audit Global & Reconstitution de l'Historique
-* **Date :** 24 septembre 2026 (22h56 – 23h15)
-* **ID Antigravity :** `1792dd4f-5925-4325-a72d-9be5b5ea786d`
-* **Objectif :** Analyse complète du projet Deporrtex, recherche et reconstitution chronologique de toutes les sessions de travail antérieures dans la mémoire Antigravity.
-
----
-
-### Session 7 : Consolidation & Génération du Rapport Markdown
-* **Date :** 24 septembre 2026 (23h25)
-* **ID Antigravity :** `95e4e9ec-34c7-432b-9c46-c42a113cc052` (Session active)
-* **Objectif :** Formalisation de l'ensemble des connaissances, architectures et historiques dans un document Markdown dédié et pérenne.
-
----
-
-## 5. État des Lieux Actuel & Actions Recommandées
-
-### État du Dépôt Git
-- Branche actuelle : `feat/shopify-design-fidelity`.
-- Fichiers non suivis (untracked) prêts à être commités : les 4 landing pages [`deportex01.html`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/deportex01.html) à [`04.html`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/deportex04.html), le logo, la documentation logistique et les clés.
-- Anciennes images supprimées en local dans l'arborescence racine à synchroniser (`git add -u` ou nettoyage propre).
-
-### Prochaines Étapes Recommandées
-1. **Validation du Tracking CAPI Meta :** Effectuer une commande de test en mode Test Events sur Meta Events Manager pour vérifier la bonne réception simultanée du Pixel et du CAPI avec le score de qualité de correspondance (> 7/10).
-2. **A/B Testing des Variantes :** Comparer les performances d'engagement et de coût par acquisition (CPA) entre les 4 variantes de landing pages sur les audiences sportives Meta en Algérie.
-3. **Commit & Push de Clôture :** Réaliser un commit propre intégrant les 4 landing pages, les documentations et ce fichier récapitulatif pour figer l'état stable du projet.
+  1. Développement de 4 fonctions Serverless Vercel Node.js (`api/noest/data.js`, `api/noest/communes.js`, `api/order.js`, `api/capi-event.js`).
+  2. Configuration du fichier de routage et d'en-têtes de cache [`vercel.json`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/vercel.json).
+  3. Déploiement de toutes les images statiques sous [`images/deportex/`](file:///c:/Users/TOSHIBA/Desktop/rami%20site/images/deportex/) pour un chargement CDN mondial instantané.
+  4. Création de `.gitignore` pour sécuriser strictement les clés privées et certificats VPS (`SSH KEY/`).
+  5. Remplacement de `index.html` par la version optimisée et connectée.
+  6. Commit `3080f4f` et push synchronisé sur `main` et `feat/shopify-design-fidelity`.
+  7. Tests en conditions réelles : validation du retour HTTP 200, test réussi de l'API de communes (57 communes pour Alger), test réussi de l'API de commande avec réponse directe des serveurs NOEST et confirmation de réception par l'API Graph de Meta (`events_received: 1`).
