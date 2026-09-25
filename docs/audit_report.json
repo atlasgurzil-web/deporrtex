@@ -1,0 +1,187 @@
+{
+  "total": 30,
+  "passed": 30,
+  "failed": 0,
+  "results": [
+    {
+      "category": "Routing",
+      "name": "/ - Page Principale (index)",
+      "passed": true,
+      "details": "HTTP 200, 77400 bytes (592ms)"
+    },
+    {
+      "category": "Routing",
+      "name": "/deportex01 - Variante 01 (Crimson Red)",
+      "passed": true,
+      "details": "HTTP 200, 77436 bytes (295ms)"
+    },
+    {
+      "category": "Routing",
+      "name": "/deportex02 - Variante 02 (Electric Cyan)",
+      "passed": true,
+      "details": "HTTP 200, 77437 bytes (667ms)"
+    },
+    {
+      "category": "Routing",
+      "name": "/deportex03 - Variante 03 (Cyber Neon Lime)",
+      "passed": true,
+      "details": "HTTP 200, 77435 bytes (295ms)"
+    },
+    {
+      "category": "Routing",
+      "name": "/deportex04 - Variante 04 (Turbo Blaze Orange)",
+      "passed": true,
+      "details": "HTTP 200, 77440 bytes (372ms)"
+    },
+    {
+      "category": "CDN Assets",
+      "name": "Logo Officiel PNG",
+      "passed": true,
+      "details": "44167 octets (363ms) [Cache: public, max-age=31536000, immutable]"
+    },
+    {
+      "category": "CDN Assets",
+      "name": "Hero Image Shopify",
+      "passed": true,
+      "details": "199187 octets (570ms) [Cache: public, max-age=31536000, immutable]"
+    },
+    {
+      "category": "CDN Assets",
+      "name": "Section Pain Points",
+      "passed": true,
+      "details": "180713 octets (383ms) [Cache: public, max-age=31536000, immutable]"
+    },
+    {
+      "category": "CDN Assets",
+      "name": "Section Solution",
+      "passed": true,
+      "details": "179117 octets (434ms) [Cache: public, max-age=31536000, immutable]"
+    },
+    {
+      "category": "CDN Assets",
+      "name": "Section Caractéristiques",
+      "passed": true,
+      "details": "154320 octets (472ms) [Cache: public, max-age=31536000, immutable]"
+    },
+    {
+      "category": "CDN Assets",
+      "name": "Produit Rouge & Noir HD",
+      "passed": true,
+      "details": "113160 octets (409ms) [Cache: public, max-age=31536000, immutable]"
+    },
+    {
+      "category": "CDN Assets",
+      "name": "Produit Transparent HD",
+      "passed": true,
+      "details": "243337 octets (529ms) [Cache: public, max-age=31536000, immutable]"
+    },
+    {
+      "category": "CDN Assets",
+      "name": "Preuve Sociale Avis Client 1",
+      "passed": true,
+      "details": "161404 octets (390ms) [Cache: public, max-age=31536000, immutable]"
+    },
+    {
+      "category": "Meta Tracking",
+      "name": "Présence Pixel ID 1422859033068055",
+      "passed": true,
+      "details": "Trouvé dans le DOM"
+    },
+    {
+      "category": "Meta Tracking",
+      "name": "Initialisation fbq avec pays",
+      "passed": true,
+      "details": "country: 'dz' configuré"
+    },
+    {
+      "category": "Meta Tracking",
+      "name": "Événement PageView",
+      "passed": true,
+      "details": "PageView dispatché"
+    },
+    {
+      "category": "Meta Tracking",
+      "name": "Événement Purchase",
+      "passed": true,
+      "details": "Purchase avec valeur DZD"
+    },
+    {
+      "category": "Meta Tracking",
+      "name": "Déduplication eventID",
+      "passed": true,
+      "details": "Identifiant unique CAPI partagé"
+    },
+    {
+      "category": "NOEST API",
+      "name": "/api/noest/data",
+      "passed": true,
+      "details": "56 wilayas, 113 bureaux Stop-Desk (315ms)"
+    },
+    {
+      "category": "NOEST API",
+      "name": "Communes Alger (16)",
+      "passed": true,
+      "details": "57 communes chargées (701ms)"
+    },
+    {
+      "category": "NOEST API",
+      "name": "Communes Oran (31)",
+      "passed": true,
+      "details": "26 communes chargées (402ms)"
+    },
+    {
+      "category": "NOEST API",
+      "name": "Communes Constantine (25)",
+      "passed": true,
+      "details": "12 communes chargées (395ms)"
+    },
+    {
+      "category": "Meta CAPI",
+      "name": "/api/capi-event Dispatch",
+      "passed": true,
+      "details": "Serveur CAPI en ligne (364ms)"
+    },
+    {
+      "category": "Order Gateway",
+      "name": "Traitement Commande (/api/order)",
+      "passed": true,
+      "details": "Réf: DPX-860907 (852ms)"
+    },
+    {
+      "category": "Order Gateway",
+      "name": "Meta CAPI Purchase Reçu",
+      "passed": true,
+      "details": "events_received: 1"
+    },
+    {
+      "category": "UI & A11y",
+      "name": "Support RTL Natif",
+      "passed": true,
+      "details": "Sens de lecture arabe conforme"
+    },
+    {
+      "category": "UI & A11y",
+      "name": "Typographie Cairo Google Fonts",
+      "passed": true,
+      "details": "Police Cairo chargée"
+    },
+    {
+      "category": "UI & A11y",
+      "name": "Meta Viewport Mobile-First",
+      "passed": true,
+      "details": "Responsive mobile-first"
+    },
+    {
+      "category": "UI & A11y",
+      "name": "Touch Target Bouton Principal",
+      "passed": true,
+      "details": "Bouton d'action proéminent avec états de chargement"
+    },
+    {
+      "category": "UI & A11y",
+      "name": "Formulaire Visible Above the Fold",
+      "passed": true,
+      "details": "Positionné sous le hero pour conversion immédiate"
+    }
+  ]
+}
