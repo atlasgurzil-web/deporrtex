@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/api/boostili/noest/data", "destination": "/api/noest/data" },
+    { "source": "/api/boostili/noest/communes", "destination": "/api/noest/communes" },
+    { "source": "/api/boostili/order", "destination": "/api/order" },
+    { "source": "/api/boostili/capi-event", "destination": "/api/capi-event" }
+  ],
+  "headers": [
+    {
+      "source": "/images/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ]
+}
