@@ -4,6 +4,8 @@ const NOEST_TOKEN = process.env.NOEST_TOKEN || "JlLZKsPRF6eClTd4v2NaDfS60JZLbgxt
 const NOEST_GUID = process.env.NOEST_GUID || "UHGCDOGE";
 const META_PIXEL_ID = process.env.META_PIXEL_ID || "1422859033068055";
 const META_ACCESS_TOKEN = process.env.META_ACCESS_TOKEN || "EAANMcvfs0pMBSdirhWIvrsGm4vGYw0eCsRRrlKMEswd4ccPxYNKtAcUxyHbZBAwJdJJhLIWP5c4HMEGmV7Im3ZADcNiLUlFfRGhhRLNr6FsoAtRFXNjZCDs5ZAOTV0BwG2SMZCnZBzlZATuJaSEXTZCmqMQDZBFrwN6r4CFEGp32kOa2rlSSQ6GHWukZCchx07uwZDZD";
+const TIKTOK_PIXEL_ID = process.env.TIKTOK_PIXEL_ID || "DARV2UBC77U88MSO7R6G";
+const TIKTOK_ACCESS_TOKEN = process.env.TIKTOK_ACCESS_TOKEN || "";
 
 function sha256(val) {
   if (!val) return null;
@@ -160,12 +162,62 @@ export default async function handler(req, res) {
       console.error("Meta CAPI Exception:", capiErr.message);
     }
 
+    // 4. Send Server-Side Purchase Event to TikTok Events API (if access token configured)
+    let tiktokCapiResult = null;
+    if (TIKTOK_ACCESS_TOKEN) {
+      try {
+        const ttPayload = {
+          event_source: "web",
+          event_source_id: TIKTOK_PIXEL_ID,
+          data: [
+            {
+              event: "CompletePayment",
+              event_time: ts,
+              event_id: purchaseEventId,
+              user: {
+                phone: sha256(metaPhone),
+                client_ip_address: clientIp,
+                client_user_agent: clientUserAgent,
+                ttclid: body.ttclid || null,
+                ttp: body.ttp || null
+              },
+              properties: {
+                currency: "DZD",
+                value: unitPrice,
+                contents: [
+                  {
+                    content_id: "deportex-glasses-2in1",
+                    content_type: "product",
+                    content_name: `Deporrtex ${body.color || ""}`.trim(),
+                    quantity: Number(body.quantity) || 1,
+                    price: unitPrice
+                  }
+                ]
+              }
+            }
+          ]
+        };
+        const ttRes = await fetch("https://business-api.tiktok.com/open_api/v1.3/event/track/", {
+          method: "POST",
+          headers: {
+            "Access-Token": TIKTOK_ACCESS_TOKEN,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(ttPayload)
+        });
+        tiktokCapiResult = await ttRes.json();
+      } catch (ttErr) {
+        console.error("TikTok Events API Exception:", ttErr.message);
+      }
+    }
+
     return res.status(200).json({
       ok: true,
       orderNumber: orderNumber,
       tracking: noestTracking,
       noest: noestResult,
-      capi: capiResult ? { events_received: capiResult.events_received } : null
+      capi: capiResult ? { events_received: capiResult.events_received } : null,
+      tiktok_capi: tiktokCapiResult ? { code: tiktokCapiResult.code } : null
     });
 
   } catch (error) {

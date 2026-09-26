@@ -30,6 +30,14 @@
     // Initial PageView
     const pvId = "pv_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
     fbq('track', 'PageView', {}, { eventID: pvId });
+    fbq('track', 'ViewContent', {
+      content_name: 'نظارات رياضية طبية Deporrtex',
+      content_category: 'Glasses',
+      content_ids: ['deportex-glasses-2in1'],
+      content_type: 'product',
+      value: 2900,
+      currency: 'DZD'
+    });
     
     // Dispatch Server CAPI PageView
     try {
@@ -1604,7 +1612,10 @@
     let communesCache = {};
 
     // 0. Smooth Scroll to Order Form with Offset & Track InitiateCheckout
-    function scrollToOrderForm() {
+    let checkoutInitiated = false;
+    function trackInitiateCheckout() {
+      if (checkoutInitiated) return;
+      checkoutInitiated = true;
       try {
         if (window.ttq) {
           ttq.track('InitiateCheckout', {
@@ -1618,11 +1629,37 @@
           });
         }
       } catch(e) {}
+      try {
+        if (window.fbq) {
+          fbq('track', 'InitiateCheckout', {
+            content_name: 'نظارات رياضية طبية Deporrtex',
+            content_category: 'Glasses',
+            content_ids: ['deportex-glasses-2in1'],
+            content_type: 'product',
+            value: currentQuantity * UNIT_PRICE,
+            currency: 'DZD',
+            num_items: currentQuantity
+          });
+        }
+      } catch(e) {}
+    }
+
+    function scrollToOrderForm() {
+      trackInitiateCheckout();
       const section = document.getElementById('orderFormSection');
       if (!section) return;
       const y = section.getBoundingClientRect().top + window.pageYOffset - 15;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      ['custName', 'custPhone', 'custWilaya', 'custCommune', 'custAddress'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('focus', trackInitiateCheckout, { once: true });
+        }
+      });
+    });
 
     // 1. Fetch NOEST Reference Data on Page Load
     async function initNoestData() {
@@ -1890,11 +1927,13 @@
       const orderColor = document.getElementById('inputColor').value || 'أسود وأحمر';
       const purchaseEventId = "pur_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
 
-      // Extract Meta cookies & campaign parameters
+      // Extract Meta & TikTok cookies & campaign parameters
       const fbp = getMetaCookie('_fbp');
       let fbc = getMetaCookie('_fbc');
+      const ttp = getMetaCookie('_ttp');
       const urlParams = new URLSearchParams(window.location.search);
       const fbclid = urlParams.get('fbclid');
+      const ttclid = urlParams.get('ttclid');
       if (!fbc && fbclid) {
         fbc = 'fb.1.' + Math.floor(Date.now() / 1000) + '.' + fbclid;
       }
@@ -1921,8 +1960,18 @@
           } else if (ttPhone && !ttPhone.startsWith('+')) {
             ttPhone = '+213' + ttPhone;
           }
+          const fullName = name.value.trim();
+          const nameParts = fullName.split(' ');
+          const ttFirstName = nameParts[0] || '';
+          const ttLastName = nameParts.slice(1).join(' ') || '';
+          const ttCity = (currentDeliveryMode === 'home' ? commune.value : wilaya.value) || '';
+
           ttq.identify({
-            phone_number: ttPhone
+            phone_number: ttPhone,
+            first_name: ttFirstName,
+            last_name: ttLastName,
+            city: ttCity,
+            country: 'DZ'
           });
           ttq.track('CompletePayment', {
             content_id: 'deportex-glasses-2in1',
@@ -1945,9 +1994,6 @@
         }
       } catch(err) {}
 
-      // Extract TikTok click ID
-      const ttclid = urlParams.get('ttclid');
-
       // Prepare Order Payload
       const orderPayload = {
         name: name.value.trim(),
@@ -1967,6 +2013,7 @@
         eventUrl: window.location.href,
         fbp: fbp,
         fbc: fbc,
+        ttp: ttp,
         fbclid: fbclid,
         ttclid: ttclid,
         utm_source: urlParams.get('utm_source'),

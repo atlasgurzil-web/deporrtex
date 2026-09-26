@@ -1,0 +1,402 @@
+{
+  "timestamp": "2026-09-26 18:25:32",
+  "audit_target": "Deporrtex Multi-Pixel Ecosystem (Meta Ads + TikTok Ads)",
+  "meta_pixel_id": "1422859033068055",
+  "tiktok_pixel_id": "DARV2UBC77U88MSO7R6G",
+  "pages_audited": [
+    "index.html",
+    "deportex01.html",
+    "deportex02.html",
+    "deportex03.html",
+    "deportex04.html"
+  ],
+  "tests_total": 64,
+  "tests_passed": 64,
+  "tests_failed": 0,
+  "details": [
+    {
+      "category": "TikTok Server",
+      "test": "Statut Pixel TikTok DARV2UBC77U88MSO7R6G",
+      "status": "PASS",
+      "details": "HTTP 200, Pixel actif sur TikTok"
+    },
+    {
+      "category": "TikTok Server",
+      "test": "Advanced Matching Actif (TikTok)",
+      "status": "PASS",
+      "details": "Propriétés: phone, name, email, city supportées"
+    },
+    {
+      "category": "TikTok Server",
+      "test": "First-Party Cookie (_ttp) Activé",
+      "status": "PASS",
+      "details": "enableFirstPartyCookie actif sur TikTok"
+    },
+    {
+      "category": "Meta CAPI",
+      "test": "Validation Token & Graph API v21.0",
+      "status": "PASS",
+      "details": "events_received: 1, fbtrace_id: AoLAEcALRHPzp7JitTblOMS"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[index.html] Meta Pixel ID & Snippet",
+      "status": "PASS",
+      "details": "ID 1422859033068055 présent"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[index.html] Meta PageView & ViewContent",
+      "status": "PASS",
+      "details": "PageView + ViewContent déclenchés"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[index.html] Meta InitiateCheckout",
+      "status": "PASS",
+      "details": "InitiateCheckout bouton CTA + auto-focus champs"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[index.html] Meta Purchase & Déduplication",
+      "status": "PASS",
+      "details": "Purchase avec eventID unique pour CAPI"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[index.html] Meta Advanced Matching Dynamique",
+      "status": "PASS",
+      "details": "getCustomerIdentity avec hachage sha256"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[index.html] TikTok Pixel ID & Snippet Base",
+      "status": "PASS",
+      "details": "ID DARV2UBC77U88MSO7R6G présent"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[index.html] TikTok Page & ViewContent",
+      "status": "PASS",
+      "details": "ttq.page() + ViewContent avec prix 2900 DZD"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[index.html] TikTok InitiateCheckout",
+      "status": "PASS",
+      "details": "ttq.track('InitiateCheckout') sur clic + focus"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[index.html] TikTok CompletePayment + PlaceAnOrder",
+      "status": "PASS",
+      "details": "Dual events COD conformes"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[index.html] TikTok Identify (Advanced Matching)",
+      "status": "PASS",
+      "details": "ttq.identify(phone, first_name, last_name, city, country)"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[index.html] TikTok Click ID & Cookie Tracking",
+      "status": "PASS",
+      "details": "Capture de ttclid et cookie _ttp"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex01.html] Meta Pixel ID & Snippet",
+      "status": "PASS",
+      "details": "ID 1422859033068055 présent"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex01.html] Meta PageView & ViewContent",
+      "status": "PASS",
+      "details": "PageView + ViewContent déclenchés"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex01.html] Meta InitiateCheckout",
+      "status": "PASS",
+      "details": "InitiateCheckout bouton CTA + auto-focus champs"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex01.html] Meta Purchase & Déduplication",
+      "status": "PASS",
+      "details": "Purchase avec eventID unique pour CAPI"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex01.html] Meta Advanced Matching Dynamique",
+      "status": "PASS",
+      "details": "getCustomerIdentity avec hachage sha256"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex01.html] TikTok Pixel ID & Snippet Base",
+      "status": "PASS",
+      "details": "ID DARV2UBC77U88MSO7R6G présent"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex01.html] TikTok Page & ViewContent",
+      "status": "PASS",
+      "details": "ttq.page() + ViewContent avec prix 2900 DZD"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex01.html] TikTok InitiateCheckout",
+      "status": "PASS",
+      "details": "ttq.track('InitiateCheckout') sur clic + focus"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex01.html] TikTok CompletePayment + PlaceAnOrder",
+      "status": "PASS",
+      "details": "Dual events COD conformes"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex01.html] TikTok Identify (Advanced Matching)",
+      "status": "PASS",
+      "details": "ttq.identify(phone, first_name, last_name, city, country)"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex01.html] TikTok Click ID & Cookie Tracking",
+      "status": "PASS",
+      "details": "Capture de ttclid et cookie _ttp"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex02.html] Meta Pixel ID & Snippet",
+      "status": "PASS",
+      "details": "ID 1422859033068055 présent"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex02.html] Meta PageView & ViewContent",
+      "status": "PASS",
+      "details": "PageView + ViewContent déclenchés"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex02.html] Meta InitiateCheckout",
+      "status": "PASS",
+      "details": "InitiateCheckout bouton CTA + auto-focus champs"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex02.html] Meta Purchase & Déduplication",
+      "status": "PASS",
+      "details": "Purchase avec eventID unique pour CAPI"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex02.html] Meta Advanced Matching Dynamique",
+      "status": "PASS",
+      "details": "getCustomerIdentity avec hachage sha256"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex02.html] TikTok Pixel ID & Snippet Base",
+      "status": "PASS",
+      "details": "ID DARV2UBC77U88MSO7R6G présent"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex02.html] TikTok Page & ViewContent",
+      "status": "PASS",
+      "details": "ttq.page() + ViewContent avec prix 2900 DZD"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex02.html] TikTok InitiateCheckout",
+      "status": "PASS",
+      "details": "ttq.track('InitiateCheckout') sur clic + focus"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex02.html] TikTok CompletePayment + PlaceAnOrder",
+      "status": "PASS",
+      "details": "Dual events COD conformes"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex02.html] TikTok Identify (Advanced Matching)",
+      "status": "PASS",
+      "details": "ttq.identify(phone, first_name, last_name, city, country)"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex02.html] TikTok Click ID & Cookie Tracking",
+      "status": "PASS",
+      "details": "Capture de ttclid et cookie _ttp"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex03.html] Meta Pixel ID & Snippet",
+      "status": "PASS",
+      "details": "ID 1422859033068055 présent"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex03.html] Meta PageView & ViewContent",
+      "status": "PASS",
+      "details": "PageView + ViewContent déclenchés"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex03.html] Meta InitiateCheckout",
+      "status": "PASS",
+      "details": "InitiateCheckout bouton CTA + auto-focus champs"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex03.html] Meta Purchase & Déduplication",
+      "status": "PASS",
+      "details": "Purchase avec eventID unique pour CAPI"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex03.html] Meta Advanced Matching Dynamique",
+      "status": "PASS",
+      "details": "getCustomerIdentity avec hachage sha256"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex03.html] TikTok Pixel ID & Snippet Base",
+      "status": "PASS",
+      "details": "ID DARV2UBC77U88MSO7R6G présent"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex03.html] TikTok Page & ViewContent",
+      "status": "PASS",
+      "details": "ttq.page() + ViewContent avec prix 2900 DZD"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex03.html] TikTok InitiateCheckout",
+      "status": "PASS",
+      "details": "ttq.track('InitiateCheckout') sur clic + focus"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex03.html] TikTok CompletePayment + PlaceAnOrder",
+      "status": "PASS",
+      "details": "Dual events COD conformes"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex03.html] TikTok Identify (Advanced Matching)",
+      "status": "PASS",
+      "details": "ttq.identify(phone, first_name, last_name, city, country)"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex03.html] TikTok Click ID & Cookie Tracking",
+      "status": "PASS",
+      "details": "Capture de ttclid et cookie _ttp"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex04.html] Meta Pixel ID & Snippet",
+      "status": "PASS",
+      "details": "ID 1422859033068055 présent"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex04.html] Meta PageView & ViewContent",
+      "status": "PASS",
+      "details": "PageView + ViewContent déclenchés"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex04.html] Meta InitiateCheckout",
+      "status": "PASS",
+      "details": "InitiateCheckout bouton CTA + auto-focus champs"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex04.html] Meta Purchase & Déduplication",
+      "status": "PASS",
+      "details": "Purchase avec eventID unique pour CAPI"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex04.html] Meta Advanced Matching Dynamique",
+      "status": "PASS",
+      "details": "getCustomerIdentity avec hachage sha256"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex04.html] TikTok Pixel ID & Snippet Base",
+      "status": "PASS",
+      "details": "ID DARV2UBC77U88MSO7R6G présent"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex04.html] TikTok Page & ViewContent",
+      "status": "PASS",
+      "details": "ttq.page() + ViewContent avec prix 2900 DZD"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex04.html] TikTok InitiateCheckout",
+      "status": "PASS",
+      "details": "ttq.track('InitiateCheckout') sur clic + focus"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex04.html] TikTok CompletePayment + PlaceAnOrder",
+      "status": "PASS",
+      "details": "Dual events COD conformes"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex04.html] TikTok Identify (Advanced Matching)",
+      "status": "PASS",
+      "details": "ttq.identify(phone, first_name, last_name, city, country)"
+    },
+    {
+      "category": "Tracking Audit",
+      "test": "[deportex04.html] TikTok Click ID & Cookie Tracking",
+      "status": "PASS",
+      "details": "Capture de ttclid et cookie _ttp"
+    },
+    {
+      "category": "Serverless Gateway",
+      "test": "Meta CAPI v21.0 Dispatch",
+      "status": "PASS",
+      "details": "Endpoint Graph API configuré"
+    },
+    {
+      "category": "Serverless Gateway",
+      "test": "Hachage SHA-256 Sécurisé (PII)",
+      "status": "PASS",
+      "details": "Hachage conforme RGPD/Meta des données client"
+    },
+    {
+      "category": "Serverless Gateway",
+      "test": "Déduplication event_id",
+      "status": "PASS",
+      "details": "eventId partagé entre browser et CAPI"
+    },
+    {
+      "category": "Serverless Gateway",
+      "test": "Création Commande NOEST",
+      "status": "PASS",
+      "details": "Transmission directe du colis à NOEST"
+    },
+    {
+      "category": "Serverless Gateway",
+      "test": "TikTok Events API Ready (S2S)",
+      "status": "PASS",
+      "details": "Structure CAPI TikTok pré-câblée avec fallback token"
+    }
+  ]
+}

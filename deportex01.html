@@ -30,6 +30,14 @@
     // Initial PageView
     const pvId = "pv_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
     fbq('track', 'PageView', {}, { eventID: pvId });
+    fbq('track', 'ViewContent', {
+      content_name: 'نظارات رياضية طبية Deporrtex',
+      content_category: 'Glasses',
+      content_ids: ['deportex-glasses-2in1'],
+      content_type: 'product',
+      value: 2900,
+      currency: 'DZD'
+    });
     
     // Dispatch Server CAPI PageView
     try {
@@ -92,6 +100,26 @@
   <noscript>
     <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1422859033068055&ev=PageView&noscript=1"/>
   </noscript>
+
+  <!-- TikTok Pixel Code Start -->
+  <script>
+    !function (w, d, t) {
+      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+    var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+    ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+
+      ttq.load('DARV2UBC77U88MSO7R6G');
+      ttq.page();
+      ttq.track('ViewContent', {
+        content_id: 'deportex-glasses-2in1',
+        content_type: 'product',
+        content_name: 'نظارات رياضية طبية Deporrtex',
+        value: 2900,
+        currency: 'DZD'
+      });
+    }(window, document, 'ttq');
+  </script>
+  <!-- TikTok Pixel Code End -->
 
   <style>
     /* ===== RESET & THEME TOKENS ===== */
@@ -1583,13 +1611,55 @@
     let noestDesks = null;
     let communesCache = {};
 
-    // 0. Smooth Scroll to Order Form with Offset
+    // 0. Smooth Scroll to Order Form with Offset & Track InitiateCheckout
+    let checkoutInitiated = false;
+    function trackInitiateCheckout() {
+      if (checkoutInitiated) return;
+      checkoutInitiated = true;
+      try {
+        if (window.ttq) {
+          ttq.track('InitiateCheckout', {
+            content_id: 'deportex-glasses-2in1',
+            content_type: 'product',
+            content_name: 'نظارات رياضية طبية Deporrtex',
+            quantity: currentQuantity,
+            price: UNIT_PRICE,
+            value: currentQuantity * UNIT_PRICE,
+            currency: 'DZD'
+          });
+        }
+      } catch(e) {}
+      try {
+        if (window.fbq) {
+          fbq('track', 'InitiateCheckout', {
+            content_name: 'نظارات رياضية طبية Deporrtex',
+            content_category: 'Glasses',
+            content_ids: ['deportex-glasses-2in1'],
+            content_type: 'product',
+            value: currentQuantity * UNIT_PRICE,
+            currency: 'DZD',
+            num_items: currentQuantity
+          });
+        }
+      } catch(e) {}
+    }
+
     function scrollToOrderForm() {
+      trackInitiateCheckout();
       const section = document.getElementById('orderFormSection');
       if (!section) return;
       const y = section.getBoundingClientRect().top + window.pageYOffset - 15;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      ['custName', 'custPhone', 'custWilaya', 'custCommune', 'custAddress'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('focus', trackInitiateCheckout, { once: true });
+        }
+      });
+    });
 
     // 1. Fetch NOEST Reference Data on Page Load
     async function initNoestData() {
@@ -1857,11 +1927,13 @@
       const orderColor = document.getElementById('inputColor').value || 'أسود وأحمر';
       const purchaseEventId = "pur_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
 
-      // Extract Meta cookies & campaign parameters
+      // Extract Meta & TikTok cookies & campaign parameters
       const fbp = getMetaCookie('_fbp');
       let fbc = getMetaCookie('_fbc');
+      const ttp = getMetaCookie('_ttp');
       const urlParams = new URLSearchParams(window.location.search);
       const fbclid = urlParams.get('fbclid');
+      const ttclid = urlParams.get('ttclid');
       if (!fbc && fbclid) {
         fbc = 'fb.1.' + Math.floor(Date.now() / 1000) + '.' + fbclid;
       }
@@ -1877,6 +1949,49 @@
           content_ids: ['deportex-glasses-2in1'],
           num_items: orderQty
         }, { eventID: purchaseEventId });
+      } catch(err) {}
+
+      // TikTok Pixel Purchase Event
+      try {
+        if (window.ttq) {
+          let ttPhone = phoneVal;
+          if (ttPhone.startsWith('0')) {
+            ttPhone = '+213' + ttPhone.substring(1);
+          } else if (ttPhone && !ttPhone.startsWith('+')) {
+            ttPhone = '+213' + ttPhone;
+          }
+          const fullName = name.value.trim();
+          const nameParts = fullName.split(' ');
+          const ttFirstName = nameParts[0] || '';
+          const ttLastName = nameParts.slice(1).join(' ') || '';
+          const ttCity = (currentDeliveryMode === 'home' ? commune.value : wilaya.value) || '';
+
+          ttq.identify({
+            phone_number: ttPhone,
+            first_name: ttFirstName,
+            last_name: ttLastName,
+            city: ttCity,
+            country: 'DZ'
+          });
+          ttq.track('CompletePayment', {
+            content_id: 'deportex-glasses-2in1',
+            content_type: 'product',
+            content_name: 'Deporrtex ' + orderColor,
+            quantity: orderQty,
+            price: totalVal,
+            value: totalVal,
+            currency: 'DZD'
+          });
+          ttq.track('PlaceAnOrder', {
+            content_id: 'deportex-glasses-2in1',
+            content_type: 'product',
+            content_name: 'Deporrtex ' + orderColor,
+            quantity: orderQty,
+            price: totalVal,
+            value: totalVal,
+            currency: 'DZD'
+          });
+        }
       } catch(err) {}
 
       // Prepare Order Payload
@@ -1898,7 +2013,9 @@
         eventUrl: window.location.href,
         fbp: fbp,
         fbc: fbc,
+        ttp: ttp,
         fbclid: fbclid,
+        ttclid: ttclid,
         utm_source: urlParams.get('utm_source'),
         utm_medium: urlParams.get('utm_medium'),
         utm_campaign: urlParams.get('utm_campaign'),
