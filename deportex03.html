@@ -93,6 +93,26 @@
     <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1422859033068055&ev=PageView&noscript=1"/>
   </noscript>
 
+  <!-- TikTok Pixel Code Start -->
+  <script>
+    !function (w, d, t) {
+      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+    var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+    ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+
+      ttq.load('DARV2UBC77U88MSO7R6G');
+      ttq.page();
+      ttq.track('ViewContent', {
+        content_id: 'deportex-glasses-2in1',
+        content_type: 'product',
+        content_name: 'نظارات رياضية طبية Deporrtex',
+        value: 2900,
+        currency: 'DZD'
+      });
+    }(window, document, 'ttq');
+  </script>
+  <!-- TikTok Pixel Code End -->
+
   <style>
     /* ===== RESET & THEME TOKENS ===== */
     :root {
@@ -1583,8 +1603,21 @@
     let noestDesks = null;
     let communesCache = {};
 
-    // 0. Smooth Scroll to Order Form with Offset
+    // 0. Smooth Scroll to Order Form with Offset & Track InitiateCheckout
     function scrollToOrderForm() {
+      try {
+        if (window.ttq) {
+          ttq.track('InitiateCheckout', {
+            content_id: 'deportex-glasses-2in1',
+            content_type: 'product',
+            content_name: 'نظارات رياضية طبية Deporrtex',
+            quantity: currentQuantity,
+            price: UNIT_PRICE,
+            value: currentQuantity * UNIT_PRICE,
+            currency: 'DZD'
+          });
+        }
+      } catch(e) {}
       const section = document.getElementById('orderFormSection');
       if (!section) return;
       const y = section.getBoundingClientRect().top + window.pageYOffset - 15;
@@ -1879,6 +1912,42 @@
         }, { eventID: purchaseEventId });
       } catch(err) {}
 
+      // TikTok Pixel Purchase Event
+      try {
+        if (window.ttq) {
+          let ttPhone = phoneVal;
+          if (ttPhone.startsWith('0')) {
+            ttPhone = '+213' + ttPhone.substring(1);
+          } else if (ttPhone && !ttPhone.startsWith('+')) {
+            ttPhone = '+213' + ttPhone;
+          }
+          ttq.identify({
+            phone_number: ttPhone
+          });
+          ttq.track('CompletePayment', {
+            content_id: 'deportex-glasses-2in1',
+            content_type: 'product',
+            content_name: 'Deporrtex ' + orderColor,
+            quantity: orderQty,
+            price: totalVal,
+            value: totalVal,
+            currency: 'DZD'
+          });
+          ttq.track('PlaceAnOrder', {
+            content_id: 'deportex-glasses-2in1',
+            content_type: 'product',
+            content_name: 'Deporrtex ' + orderColor,
+            quantity: orderQty,
+            price: totalVal,
+            value: totalVal,
+            currency: 'DZD'
+          });
+        }
+      } catch(err) {}
+
+      // Extract TikTok click ID
+      const ttclid = urlParams.get('ttclid');
+
       // Prepare Order Payload
       const orderPayload = {
         name: name.value.trim(),
@@ -1899,6 +1968,7 @@
         fbp: fbp,
         fbc: fbc,
         fbclid: fbclid,
+        ttclid: ttclid,
         utm_source: urlParams.get('utm_source'),
         utm_medium: urlParams.get('utm_medium'),
         utm_campaign: urlParams.get('utm_campaign'),
