@@ -142,7 +142,7 @@ export default async function handler(req, res) {
             content_name: `Deporrtex ${body.color || ""}`.trim(),
             content_ids: ["deportex-glasses-2in1"],
             content_type: "product",
-            content_category: body.landing_variant || "deportex01",
+            content_category: body.landing_variant || "index",
             num_items: Number(body.quantity) || 1,
             order_id: orderNumber
           }
