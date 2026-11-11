@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# Directives AI / Search Bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+# Sitemap
+Sitemap: https://deporrtex.vercel.app/sitemap.xml
